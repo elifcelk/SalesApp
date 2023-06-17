@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Satış Geçmişi Kaydını Güncelle";
+}
+@model SalesApp.Models.SalesInventory
+
+<div class="text-center" style="border:double; ">
+    <br /><br />
+    <h4>Satış Geçmişi Kaydı Güncelle</h4><br />
+    <form action="/Sales/DoUpdateSaleHistory" method="post">
+        <input type="hidden" id="id" name="id" value="@Model.Id">
+        <div class="form-group">
+            <br />
+            <label for="productId">Ürün Seçiniz :</label><br />
+            <select id="productId" name="productId">
+                @foreach (var data in ViewBag.Products)
+                {
+                    if (data.Id == Model.ProductId)
+                    {
+                        <option value="@data.Id" selected>@data.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@data.Id">@data.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <br />
+            <label for="storeId">Mağaza Seçiniz :</label><br />
+            <select id="storeId" name="storeId">
+                @foreach (var data in ViewBag.Stores)
+                {
+                    if (data.Id == Model.StoreId)
+                    {
+                        <option value="@data.Id" selected>@data.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@data.Id">@data.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <br />
+            <label for="date">Tarih Seçiniz :</label><br />
+            <input type="date" id="date" name="date" value="@Model.Date">
+        </div>
+        <div class="form-group">
+            <br />
+            <label for="quantity">Satış Miktarı Giriniz :</label><br />
+            <input type="number" id="quantity" name="quantity" value="@Model.SalesQuantity" required>
+        </div>
+        <div class="input-field">
+            <br />
+            <label for="stock">Kalan Stok Bilgisi Giriniz :</label><br />
+            <input type="number" id="stock" name="stock" value="@Model.Stock" required>
+        </div><br />
+        <input type="submit" value="Kaydet">
+    </form>
+</div>
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+}

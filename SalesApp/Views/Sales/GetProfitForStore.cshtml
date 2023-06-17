@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Seçilen Mağazaya Göre Kar Görüntüle";
+}
+
+<div class="text-center" style="border:double; ">
+    <br /><br />
+    <h4>Seçilen Mağazaya Göre Kar Görüntüle</h4><br />
+    <form action="/Sales/DoGetProfitHistory" method="get">
+        <div class="form-group">
+            <br />
+            <label for="storeId">Mağaza Seçiniz :</label><br />
+            <select id="storeId" name="storeId">
+                @foreach (var data in ViewBag.Stores)
+                {
+                    <option value="@data.Id">@data.Name</option>
+                }
+            </select>
+        </div>
+        <input type="submit" value="Görüntüle">
+    </form>
+</div>
+

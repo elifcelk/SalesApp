@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Yeni Satış Geçmişi Kaydı Ekle";
+}
+
+<div class="text-center" style="border:double; ">
+    <br /><br />
+    <h4>Satış Geçmişi Kaydı Ekle</h4><br />
+    <form action="/Sales/DoAddSaleHistory" method="post">
+        <div class="form-group">
+            <br />
+            <label for="productId">Ürün Seçiniz :</label><br />
+            <select id="productId" name="productId">
+                @foreach (var data in ViewBag.Products)
+                {
+                    <option value="@data.Id">@data.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <br />
+            <label for="storeId">Mağaza Seçiniz :</label><br />
+            <select id="storeId" name="storeId">
+                @foreach (var data in ViewBag.Stores)
+                {
+                    <option value="@data.Id">@data.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <br />
+            <label for="date">Tarih Seçiniz :</label><br />
+            <input type="date" id="date" name="date">
+        </div>
+        <div class="form-group"><br />
+            <label for="quantity">Satış Miktarı Giriniz :</label><br />
+            <input type="number" id="quantity" name="quantity" required>
+        </div>
+        <div class="input-field">
+            <br />
+            <label for="stock">Kalan Stok Bilgisi Giriniz :</label><br />
+            <input type="number" id="stock" name="stock" required>
+        </div><br />
+        <input type="submit" value="Kaydet">
+    </form>
+    </div>
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+}
