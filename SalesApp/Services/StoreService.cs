@@ -13,7 +13,7 @@ namespace SalesApp.Services
             _dataProvider = dataProvider;
             LoadStoresData();
         }
-        private void LoadStoresData()
+        private void LoadStoresData()//stores.csv içindeki tüm verileri Product nesnesine işler ve liste yapar.
         {
             var storesData = _dataProvider.ReadCsvFile("Data\\stores.csv");
             storesData.Remove(storesData[0]);
@@ -27,6 +27,11 @@ namespace SalesApp.Services
         public List<Store> GetStores() //tüm mağazaları döndürür
         {
             return _stores;
+        }
+
+        public string GetNameById(int storeId) //mağaza Id sine göre mağaza adını döndürür
+        {
+            return _stores.Where(s => s.Id == storeId).Select(s => s.Name).First();
         }
     }
 }

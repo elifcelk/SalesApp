@@ -3,7 +3,6 @@
     var rowCount = 0;
 }
 @model IEnumerable<SalesApp.Models.SalesInventory>
-
 <div class="text-center">
     <br /><br />
     <div style="float:right;">
@@ -12,7 +11,7 @@
 
 
     <div>
-        <h6>Aşağıda satış envanteri geçmiş kayıtları listelenmiştir. Dilediğiniz kaydı silebilir, güncelleyebilir veya yeni bir kayıt ekleyebilrsiniz.</h6><br />
+        <h6>Aşağıda satış envanteri geçmiş kayıtları listelenmiştir. Dilediğiniz kaydı silebilir, güncelleyebilir veya yeni bir kayıt ekleyebilirsiniz.</h6><br />
 
     </div>
 
@@ -26,6 +25,7 @@
                 <th>Satış Tarihi</th>
                 <th>Satış Mİktarı</th>
                 <th>Stok Adedi </th>
+                <th>Satış Karı </th>
                 <th class="text-center">İşlemler</th>
             </tr>
             @foreach (var data in Model)
@@ -38,6 +38,7 @@
                     <td>@data.Date.ToShortDateString()</td>
                     <td>@data.SalesQuantity</td>
                     <td>@data.Stock</td>
+                    <td>@data.Profit</td>
                     <td class="text-center">
                         <a href="@Url.Action("DeleteSaleHistory", new {id= data.Id} )" class="btn btn-danger">Sil</a>
                         <a href="@Url.Action("UpdateSaleHistory", new {id= data.Id} )" class="btn btn-primary">Güncelle</a>

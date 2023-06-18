@@ -1,7 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Yeni Satış Geçmişi Kaydı Ekle";
 }
-
+<br />
+<div style="float:right;">
+    <a href="@Url.Action("Index")" class="btn btn-primary">Ana Sayfaya Dön</a>
+</div>
+<br />
+<br />
+<br />
 <div class="text-center" style="border:double; ">
     <br /><br />
     <h4>Satış Geçmişi Kaydı Ekle</h4><br />
@@ -39,6 +45,11 @@
             <br />
             <label for="stock">Kalan Stok Bilgisi Giriniz :</label><br />
             <input type="number" id="stock" name="stock" required>
+        </div>
+        <div class="input-field">
+            <br />
+            <label for="unitprofit">Bir Üründen Elde Edilen Karı Giriniz (Birim Ürün Satış Fiyatı - Birim Ürün Maliyeti) :</label><br />
+            <input type="text" id="unitprofit" name="unitprofit" required>
         </div><br />
         <input type="submit" value="Kaydet">
     </form>

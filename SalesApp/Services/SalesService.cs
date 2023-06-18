@@ -13,10 +13,10 @@ namespace SalesApp.Services
             _dataProvider = dataProvider;
             LoadSalesData();
         }
-        private void LoadSalesData()
+        private void LoadSalesData()//inventory-sales.csv içindeki tüm verileri SalesInventory nesnesine işler ve liste yapar.
         {
             var salesData = _dataProvider.ReadCsvFile("Data\\inventory-sales.csv");
-            salesData.Remove(salesData[0]);
+            salesData.Remove(salesData[0]); //burada dosyadaki ilk satır olan başlık kısmını çıkardım. 
             _sales = salesData.Select(row => new SalesInventory
             {
                 Id = Guid.Parse(row[0]),
@@ -24,7 +24,8 @@ namespace SalesApp.Services
                 StoreId = int.Parse(row[2]),
                 Date = DateTime.Parse(row[3]),
                 SalesQuantity = int.Parse(row[4]),
-                Stock = int.Parse(row[5])
+                Stock = int.Parse(row[5]),
+                Profit = decimal.Parse(row[6])
             }).ToList();
         }
 
@@ -33,7 +34,7 @@ namespace SalesApp.Services
             return _sales;
         }
 
-        public void AddSale(int productId, int storeId, DateTime date, int quantity, int stock) // yeni bir satış geçmişi ekler
+        public void AddSale(int productId, int storeId, DateTime date, int quantity, int stock, string unitprofit) // yeni bir satış geçmişi ekler
         {
             var newSale = new SalesInventory
             {
@@ -42,7 +43,8 @@ namespace SalesApp.Services
                 StoreId = storeId,
                 Date = date,
                 SalesQuantity = quantity,
-                Stock = stock
+                Stock = stock,
+                Profit = Convert.ToDecimal(unitprofit) * quantity
             };
 
             _sales.Add(newSale);
@@ -59,14 +61,14 @@ namespace SalesApp.Services
             }
         }
 
-        public SalesInventory GetSalesHistoryById(Guid id) //belirli satış geçmişini getirir
+        public SalesInventory GetSalesHistoryById(Guid id) //id ile belirli satış geçmişini getirir
         {
             var saleHistory = _sales.First(s => s.Id == id);
             return saleHistory;
         }
 
 
-        public void UpdateSale(Guid id, int productId, int storeId, DateTime date, int quantity, int stock) // belirli bir satış geçmiş kaydını günceller
+        public void UpdateSale(Guid id, int productId, int storeId, DateTime date, int quantity, int stock,string unitprofit) // belirli bir satış geçmiş kaydını günceller
         {
             var saleToUpdate = _sales.FirstOrDefault(s => s.Id == id);
             if (saleToUpdate != null)
@@ -76,40 +78,41 @@ namespace SalesApp.Services
                 saleToUpdate.Date = date;
                 saleToUpdate.SalesQuantity = quantity;
                 saleToUpdate.Stock = stock;
+                saleToUpdate.Profit = Convert.ToDecimal(unitprofit) * quantity;
                 SaveSalesData();
             }
         }
 
         public decimal GetProfitForStore(int storeId) // belirli bir mağaza için elde edilen karı döndürür
         {
-            return _sales.Where(s => s.StoreId == storeId).Sum(s => s.Amount); 
+            return _sales.Where(s => s.StoreId == storeId).Sum(s => s.Profit);
         }
 
-        //public string GetMostProfitableStore() // en karlı mağazayı döndürür --satış tablosuna satış fiyatı-maliyet yani ürün başı kar bilgisi eklenirse, kar ile ürün miktarını çarparak satış başı elde edilen kar bulunabilir.
-        //{
-        //    var storeProfits = _sales.GroupBy(s => s.StoreId)
-        //                             .Select(g => new { StoreId = g.Key, Profit = g.Sum(s => s.Amount) })
-        //                             .OrderByDescending(s => s.Profit)
-        //                             .FirstOrDefault();
+        public StoreProfitModel GetMostProfitableStore() // en karlı mağazayı döndürür
+        {
+            var storeProfits = _sales.GroupBy(s => s.StoreId)
+                                     .Select(g => new StoreProfitModel { StoreId = g.Key, Profit = g.Sum(s => s.Profit) })
+                                     .OrderByDescending(s => s.Profit)
+                                     .FirstOrDefault();
 
-        //    return storeProfits?.StoreId;
-        //}
+            return storeProfits;
+        }
 
-        //public string GetBestSellingProduct() //satış mikatarına göre en çok satılan ürünü döndürür
-        //{
-        //    var bestSellingProduct = _sales.GroupBy(s => s.ProductId)
-        //                                   .Select(g => new { ProductId = g.Key, TotalAmount = g.Sum(s => s.Amount) })
-        //                                   .OrderByDescending(s => s.TotalAmount)
-        //                                   .FirstOrDefault();
+        public ProductSalesQuantityModel GetBestSellingProduct() //satış miktarına göre en çok satılan ürünü döndürür
+        {
+            var bestSellingProduct = _sales.GroupBy(s => s.ProductId)
+                                           .Select(g => new ProductSalesQuantityModel { ProductId = g.Key, SalesQuantity = g.Sum(s => s.SalesQuantity) })
+                                           .OrderByDescending(s => s.SalesQuantity)
+                                           .FirstOrDefault();
 
-        //    return bestSellingProduct?.ProductId;
-        //}
+            return bestSellingProduct;
+        }
 
-        private void SaveSalesData()
+        private void SaveSalesData() //verilerde değişiklik olduğunda inventory-sales.csv dosyasında değişiklikleri yapar.
         {
             List<string[]> salesDataList = new List<string[]>();
 
-            var listheader = new string[] { "Id,ProductId,StoreId,Date,SalesQuantity,Stock" };
+            var listheader = new string[] { "Id,ProductId,StoreId,Date,SalesQuantity,Stock,Profit" }; //burada dosyaya ilk satır olarak başlıkları ekledim.
 
             salesDataList.Add(listheader);
 
@@ -120,7 +123,8 @@ namespace SalesApp.Services
                 s.StoreId.ToString(),
                 s.Date.ToString("yyyy-MM-dd"),
                 s.SalesQuantity.ToString(),
-                s.Stock.ToString()
+                s.Stock.ToString(),
+                s.Profit.ToString()
             }).ToList();
 
             salesDataList.AddRange(salesData);

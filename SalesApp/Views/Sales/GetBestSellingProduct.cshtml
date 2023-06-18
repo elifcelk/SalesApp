@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "En Çok Satılan Ürün";
+}
+@model SalesApp.Models.ProductSalesQuantityModel
+<br />
+<div style="float:right;">
+    <a href="@Url.Action("Index")" class="btn btn-primary">Ana Sayfaya Dön</a>
+</div>
+<br />
+<br />
+<br />
+<div class="text-center" style="border:double; ">
+    <br /><br />
+    <h2>En Çok Satılan Ürün</h2><br />
+    <form>
+        <div class="form-group">
+            <br />
+
+            <div>
+                <h3><b><span style="color:red">@Model.ProductName</span></b></h3>
+                <h4><b>Satış Miktarı : @Model.SalesQuantity</b></h4><br /><br />
+            </div>
+        </div>
+    </form>
+</div>
+

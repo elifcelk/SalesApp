@@ -1,22 +1,42 @@
 ﻿@{
     ViewData["Title"] = "Seçilen Mağazaya Göre Kar Görüntüle";
 }
-
+<br />
+<div style="float:right;">
+    <a href="@Url.Action("Index")" class="btn btn-primary">Ana Sayfaya Dön</a>
+</div>
+<br />
+<br />
+<br />
 <div class="text-center" style="border:double; ">
     <br /><br />
     <h4>Seçilen Mağazaya Göre Kar Görüntüle</h4><br />
-    <form action="/Sales/DoGetProfitHistory" method="get">
+    <form >
         <div class="form-group">
             <br />
             <label for="storeId">Mağaza Seçiniz :</label><br />
             <select id="storeId" name="storeId">
                 @foreach (var data in ViewBag.Stores)
                 {
-                    <option value="@data.Id">@data.Name</option>
+                    if (data.Id == ViewBag.SelectedStoreId)
+                    {
+                        <option value="@data.Id" selected>@data.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@data.Id">@data.Name</option>
+                    }
                 }
-            </select>
+            </select><br /><br />
+            <div id="result">
+                <h4><b>Toplam Kar : @ViewBag.Result</b></h4>
+            </div>
         </div>
-        <input type="submit" value="Görüntüle">
+        <input id="viewButton" type="submit" value="Görüntüle">
     </form>
 </div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/Sales/getProfitForStore.js" asp-append-version="true"></script>
+}
 
