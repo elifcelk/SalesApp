@@ -69,7 +69,7 @@ namespace SalesApp.Controllers
 
             return RedirectToAction("GetAllSalesHistory");
         }
-
+        //seçilen mağazanın kar miktarını getirir
         public IActionResult GetProfitForStore(int storeId = 1)
         {
             ViewBag.Stores = _storeService.GetStores();
@@ -78,14 +78,14 @@ namespace SalesApp.Controllers
             ViewBag.Result = result;
             return View();
         }
-
+        //en karlı mağazayı getirir
         public IActionResult GetMostProfitableStore()
         {
             var storeProfit = _salesService.GetMostProfitableStore(); //en karlı mağazayı getirir
             storeProfit.StoreName = _storeService.GetNameById(storeProfit.StoreId); //mağaza id sine göre mağaza adını getirir.
             return View(storeProfit);
         }
-
+        //en çok satılan ürünü getirir
         public IActionResult GetBestSellingProduct()
         {
             var bestsellingProduct = _salesService.GetBestSellingProduct(); //en çok satılan ürünü getirir.
